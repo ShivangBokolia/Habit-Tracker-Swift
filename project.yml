@@ -1,0 +1,25 @@
+name: HabitTracker
+options:
+  bundleIdPrefix: com.shivangbokolia
+packages:
+  HabitTrackerCore:
+    path: .
+targets:
+  HabitTracker:
+    type: application
+    platform: iOS
+    deploymentTarget: "18.0"
+    sources:
+      - path: App
+    dependencies:
+      - package: HabitTrackerCore
+    info:
+      path: App/Info.plist
+      properties:
+        UILaunchScreen: {}
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.shivangbokolia.HabitTracker
+        MARKETING_VERSION: "1.0"
+        CURRENT_PROJECT_VERSION: "1"
+        SWIFT_VERSION: "6.0"
