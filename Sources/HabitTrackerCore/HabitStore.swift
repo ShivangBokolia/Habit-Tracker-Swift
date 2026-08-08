@@ -19,8 +19,7 @@ public final class HabitStore {
     }
 
     public var activeHabits: [Habit] {
-        let all = (try? context.fetch(FetchDescriptor<Habit>())) ?? []
-        return all.filter { $0.status == .active }
+        fetchAll(Habit.self).filter { $0.status == .active }
     }
 
     public func toggleDone(habitId: UUID) throws {
@@ -47,13 +46,13 @@ public final class HabitStore {
 
     public func isDoneToday(habitId: UUID) -> Bool {
         let completion = try? fetchCompletion(habitId: habitId, day: today())
-        return (completion ?? nil)?.done ?? false
+        return completion?.done ?? false
     }
 
     public var streak: Int {
-        let allHabits = (try? context.fetch(FetchDescriptor<Habit>())) ?? []
+        let allHabits = fetchAll(Habit.self)
         guard let earliestCreatedDay = allHabits.map(\.createdDay).min() else { return 0 }
-        let allCompletions = (try? context.fetch(FetchDescriptor<Completion>())) ?? []
+        let allCompletions = fetchAll(Completion.self)
         let doneByHabitAndDay = Set(allCompletions.filter(\.done).map { HabitDay(habitId: $0.habitId, day: $0.day) })
 
         var count = 0
@@ -91,5 +90,9 @@ public final class HabitStore {
             predicate: #Predicate { $0.habitId == targetHabitId && $0.day == targetDay }
         )
         return try context.fetch(descriptor).first
+    }
+
+    private func fetchAll<T: PersistentModel>(_ type: T.Type) -> [T] {
+        (try? context.fetch(FetchDescriptor<T>())) ?? []
     }
 }
