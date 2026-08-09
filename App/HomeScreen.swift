@@ -108,6 +108,7 @@ struct HomeScreen: View {
             Image(systemName: done ? "checkmark.circle.fill" : "circle")
                 .font(.title3)
                 .foregroundStyle(done ? Color.mint : Color.secondary)
+                .contentTransition(.symbolEffect(.replace))
             Text(habit.name)
                 .foregroundStyle(done ? .secondary : .primary)
         }
@@ -123,5 +124,6 @@ struct HomeScreen: View {
                 habitPendingRemoval = habit
             }
         }
+        .transition(.opacity.combined(with: .move(edge: .top)))
     }
 }
