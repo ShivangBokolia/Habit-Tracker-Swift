@@ -42,4 +42,9 @@ public final class HomeViewModel {
         try? store.toggleDone(habitId: habitId)
         refreshToken += 1
     }
+
+    public func archiveHabit(habitId: UUID) {
+        try? store.archiveHabit(id: habitId)
+        refreshToken += 1
+    }
 }

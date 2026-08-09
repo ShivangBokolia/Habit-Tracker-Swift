@@ -4,6 +4,7 @@ import HabitTrackerCore
 struct HomeScreen: View {
     var viewModel: HomeViewModel
     @State private var newHabitName = ""
+    @State private var habitPendingRemoval: Habit?
 
     var body: some View {
         NavigationStack {
@@ -30,6 +31,11 @@ struct HomeScreen: View {
                             .onTapGesture {
                                 viewModel.toggleDone(habitId: habit.id)
                             }
+                            .swipeActions {
+                                Button("Remove", role: .destructive) {
+                                    habitPendingRemoval = habit
+                                }
+                            }
                     }
                 }
             }
@@ -38,6 +44,24 @@ struct HomeScreen: View {
                 ToolbarItem(placement: .topBarTrailing) {
                     Text("🔥 \(viewModel.streak)")
                 }
+            }
+            .alert(
+                "Remove '\(habitPendingRemoval?.name ?? "")'?",
+                isPresented: Binding(
+                    get: { habitPendingRemoval != nil },
+                    set: { isPresented in if !isPresented { habitPendingRemoval = nil } }
+                ),
+                presenting: habitPendingRemoval
+            ) { habit in
+                Button("Remove", role: .destructive) {
+                    viewModel.archiveHabit(habitId: habit.id)
+                    habitPendingRemoval = nil
+                }
+                Button("Cancel", role: .cancel) {
+                    habitPendingRemoval = nil
+                }
+            } message: { _ in
+                Text("Its history will be kept.")
             }
         }
     }

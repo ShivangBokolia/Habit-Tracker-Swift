@@ -77,4 +77,15 @@ struct HomeViewModelTests {
         viewModel.toggleDone(habitId: habit.id)
         #expect(viewModel.streak == 0)
     }
+
+    @Test("archiveHabit removes the habit from activeHabits")
+    func archiveHabitRemovesFromActiveHabits() throws {
+        let (viewModel, _) = try makeViewModel()
+        viewModel.addHabit(name: "Meditate")
+        let habit = try #require(viewModel.activeHabits.first)
+
+        viewModel.archiveHabit(habitId: habit.id)
+
+        #expect(viewModel.activeHabits.isEmpty)
+    }
 }
