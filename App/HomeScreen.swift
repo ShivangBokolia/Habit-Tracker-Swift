@@ -22,7 +22,14 @@ struct HomeScreen: View {
                 }
                 Section {
                     ForEach(viewModel.activeHabits, id: \.id) { habit in
+                        let done = viewModel.isDoneToday(habitId: habit.id)
                         Text(habit.name)
+                            .strikethrough(done)
+                            .foregroundStyle(done ? .secondary : .primary)
+                            .contentShape(Rectangle())
+                            .onTapGesture {
+                                viewModel.toggleDone(habitId: habit.id)
+                            }
                     }
                 }
             }

@@ -49,4 +49,32 @@ struct HomeViewModelTests {
 
         #expect(viewModel.streak == 1)
     }
+
+    @Test("toggleDone flips isDone for that habit, then flips it back")
+    func toggleDoneFlipsIsDone() throws {
+        let (viewModel, _) = try makeViewModel()
+        viewModel.addHabit(name: "Meditate")
+        let habit = try #require(viewModel.activeHabits.first)
+        #expect(viewModel.isDoneToday(habitId: habit.id) == false)
+
+        viewModel.toggleDone(habitId: habit.id)
+        #expect(viewModel.isDoneToday(habitId: habit.id) == true)
+
+        viewModel.toggleDone(habitId: habit.id)
+        #expect(viewModel.isDoneToday(habitId: habit.id) == false)
+    }
+
+    @Test("toggleDone updates streak live")
+    func toggleDoneUpdatesStreakLive() throws {
+        let (viewModel, _) = try makeViewModel()
+        viewModel.addHabit(name: "Meditate")
+        let habit = try #require(viewModel.activeHabits.first)
+        #expect(viewModel.streak == 0)
+
+        viewModel.toggleDone(habitId: habit.id)
+        #expect(viewModel.streak == 1)
+
+        viewModel.toggleDone(habitId: habit.id)
+        #expect(viewModel.streak == 0)
+    }
 }
