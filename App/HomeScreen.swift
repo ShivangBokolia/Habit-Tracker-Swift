@@ -80,13 +80,17 @@ struct HomeScreen: View {
         HStack(spacing: 12) {
             TextField("New habit", text: $newHabitName)
                 .textFieldStyle(.plain)
+                .padding(.horizontal, 12)
+                .padding(.vertical, 8)
+                .background(Color(.secondarySystemBackground), in: .capsule)
             Button(action: addHabit) {
                 Image(systemName: "plus.circle.fill")
-                    .font(.title2)
+                    .font(.title)
                     .foregroundStyle(trimmedNewHabitName.isEmpty ? Color.secondary : Color.mint)
             }
             .disabled(trimmedNewHabitName.isEmpty)
         }
+        .listRowSeparator(.hidden)
     }
 
     private func addHabit() {
